@@ -50,3 +50,8 @@ rsconnect/
 TrabFinal/dados/Tabela_Escola_2025_V2.csv
 TrabFinal/dados/microdados_censo_escolar_2025_.zip
 *.csv
+
+# Bases de dados do trabalho
+TrabFinal/dados/Tabela_Escola_2025_V2.csv
+TrabFinal/outputs/dadosEscolaLimpos.parquet
+TrabFinal/dados/microdados_censo_escolar_2025_.zip
