@@ -19,7 +19,7 @@ set.seed(47)
 dados <- read.csv2("../dados/Tabela_Escola_2025_V2.csv", fileEncoding = "Windows-1252")
 
 # ============================================
-# 3. Variável Resposta & Separacao treino teste
+# 3. Criação da variável resposta
 # ============================================
 dados <- dados %>%
   mutate(
@@ -32,16 +32,6 @@ dados <- dados %>%
       levels = c("Privada", "Publica")
     )
   )
-
-divisao <- initial_split(
-  dados,
-  prop = 0.80,
-  strata = vResposta
-)
-
-treino <- training(divisao)
-teste  <- testing(divisao)
-
 # ============================================
 # 4. Remoção de variáveis
 # ============================================
@@ -113,11 +103,24 @@ dados$CO_ESCOLA_SEDE_VINCULADA <- NULL
 dados$TP_OCUPACAO_PREDIO_ESCOLAR <- NULL
 dados$TP_OCUPACAO_GALPAO <- NULL
 
-
-
-
 # Removendo a variável resposta
 dados$CO_REDE <- NULL
+
+# A única mudança do banco de dados foi a quantidade de variáveis. Antes o banco apresentava 290 variáveis, agora apresenta 234.
+# A quantidade de observações se manteve igual, 214.192 linhas.
+
+# ============================================
+# 5. Separação treino e teste
+# ============================================
+
+divisao <- initial_split(
+  dados,
+  prop = 0.80,
+  strata = vResposta
+)
+
+treino <- training(divisao)
+teste  <- testing(divisao)
 
 # ============================================
 # 6. Pre-processamento
