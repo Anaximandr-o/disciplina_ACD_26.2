@@ -6,6 +6,7 @@ library(tidymodels)
 library(themis)
 library(summarytools)
 library(arrow)
+library(dplyr)
 
 # Definição de semente para reprodutibilidade
 set.seed(47) 
@@ -13,8 +14,11 @@ set.seed(47)
 # ============================================
 # 2. Leitura dos Dados
 # ============================================
-dados <- read.csv2("../dados/Tabela_Escola_2025_V2.csv", fileEncoding = "Windows-1252")
+dados2 <- read.csv2("../dados/Tabela_Escola_2025_V2.csv", fileEncoding = "Windows-1252")
 
+dados <- dados2 %>%
+  dplyr::filter(!TP_SITUACAO_FUNCIONAMENTO %in% c(2,3)) %>%
+  droplevels()
 # ============================================
 # 3. Criação da variável resposta
 # ============================================
@@ -103,7 +107,7 @@ dados$TP_OCUPACAO_GALPAO <- NULL
 # Removendo a variável resposta
 dados$CO_REDE <- NULL
 
-# A única mudança do banco de dados foi a quantidade de variáveis. Antes o banco apresentava 290 variáveis, agora apresenta 234.
-# A quantidade de observações se manteve igual, 214.192 linhas.
+# Antes o banco apresentava 290 variáveis, agora apresenta 234.
+# A quantidade de observações também diminiui, indo de 214.192 linhas para 180.540.
 
 arrow::write_parquet(dados, "../outputs/dadosEscolaLimpos.parquet")
