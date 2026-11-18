@@ -110,4 +110,14 @@ dados$CO_REDE <- NULL
 # Antes o banco apresentava 290 variáveis, agora apresenta 234.
 # A quantidade de observações também diminiui, indo de 214.192 linhas para 180.540.
 
+# Tirando o traço do Centro Oeste pq o mundo se tornou uma grande colônia dos Estados Unidos
+dados <- dados %>%
+  # --- Transformação de idades impossíveis (x<0 & x>120) em NA ---
+  dplyr::mutate(
+    NO_REGIAO = dplyr::case_when(
+      NO_REGIAO %in% c("Centro-Oeste") ~ "CentroOeste",
+      TRUE ~ NO_REGIAO
+    )
+  )
+
 arrow::write_parquet(dados, "../outputs/dadosEscolaLimpos.parquet")
