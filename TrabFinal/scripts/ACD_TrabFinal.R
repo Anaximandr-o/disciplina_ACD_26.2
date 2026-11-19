@@ -19,6 +19,10 @@ dados2 <- read.csv2("../dados/Tabela_Escola_2025_V2.csv", fileEncoding = "Window
 dados <- dados2 %>%
   dplyr::filter(!TP_SITUACAO_FUNCIONAMENTO %in% c(2,3)) %>%
   droplevels()
+
+teste <- read_parquet("../outputs/dadosEscolaLimpos.parquet") 
+# Testar o banco final sem precisar rodar o script todo
+
 # ============================================
 # 3. Criação da variável resposta
 # ============================================
@@ -33,8 +37,15 @@ dados <- dados %>%
       levels = c("Privada", "Publica")
     )
   )
+
 # ============================================
-# 4. Remoção de variáveis
+# 4. Transformando variáveis
+# ============================================
+# Transformando algumas variáveis numéricas em categóricas, pq apesar dos valores serem números,
+# eles representam uma opção, não um valor numérico.
+
+# ============================================
+# 5. Remoção de variáveis
 # ============================================
 
 # Removendo variáveis não relevantes
@@ -55,6 +66,7 @@ dados$CO_SUBDISTRITO <- NULL
 # Removendo variáveis que causariam data leakage
 dados$CO_LINGUA_INDIGENA_3 <- NULL
 dados$CO_LINGUA_INDIGENA_2 <- NULL
+dados$CO_LINGUA_INDIGENA_1 <- NULL
 dados$CO_IES_OFERTANTE <- NULL
 dados$CO_SUBDISTRITO <- NULL
 dados$NO_ENTIDADE <- NULL
@@ -110,14 +122,6 @@ dados$CO_REDE <- NULL
 # Antes o banco apresentava 290 variáveis, agora apresenta 234.
 # A quantidade de observações também diminiui, indo de 214.192 linhas para 180.540.
 
-# Tirando o traço do Centro Oeste pq o mundo se tornou uma grande colônia dos Estados Unidos
-dados <- dados %>%
-  # --- Transformação de idades impossíveis (x<0 & x>120) em NA ---
-  dplyr::mutate(
-    NO_REGIAO = dplyr::case_when(
-      NO_REGIAO %in% c("Centro-Oeste") ~ "CentroOeste",
-      TRUE ~ NO_REGIAO
-    )
-  )
+
 
 arrow::write_parquet(dados, "../outputs/dadosEscolaLimpos.parquet")
